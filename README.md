@@ -14,12 +14,14 @@ Enderbot is both a minecraft plugin and a discord bot. It is designed to do 2 th
 ### Customisable config file
 EnderBot also features a config file here is what the default file looks like:
 
-`# Ender Bot Configuration File
+```
+# Ender Bot Configuration File
 world-backups-channel-name=minecraft-backups
 minecraft-ingame-channel-name=minecraft-in-game
 world-backups-frequency-in-days=30
 
-discord_bot_token=`
+discord_bot_token=
+```
 
 world-backups-channel-name:
 Set's the discord text channel that the zip message will be sent to.
