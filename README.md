@@ -44,3 +44,7 @@ You can find out how to get your own credentials.json and give permission to upl
 https://developers.google.com/drive/api/v3/quickstart/java
 
 But also note on first startup with a correct config file. The bot will sent a link that will require manual authorisation. This is due to how google authenticates the google drive api. 
+
+
+### Licensing
+Note this code is released under GPL-v3
