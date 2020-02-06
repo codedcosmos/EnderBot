@@ -7,10 +7,12 @@ Enderbot is both a minecraft plugin and a discord bot. It is designed to do 2 th
 
 ### Minecraft to Discord
 Enderbot can reroute text from a specified discord channel to minecraft, and from minecraft chat back to that discord channel. Allowing people from the minecraft server and discord server to communicate.
+
 ![](screenshots/discordtominecraft.png)
 
 ### Zip Export
 Every specified number of days Enderbot will automatically send a zip of the world file to the discord server making archival for server members automated and easy.
+
 ![](screenshots/zip.png)
 
 ### Customisable config file
