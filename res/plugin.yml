@@ -1,5 +1,10 @@
 name: EnderBot
-version: 0.1
+version: 1.0
 author: codedcosmos
 main: codedcosmos.enderbot.plugin.MinecraftPlugin
 api-version: 1.15
+
+commands:
+  enderbackup:
+    description: Backs up the world and uploads zip
+    usage: /enderbackup

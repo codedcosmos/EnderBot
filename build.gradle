@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'codedcosmos'
-version '0.1'
+version '1.0'
 mainClassName = 'codedcosmos.enderbot.core.EnderBot'
 
 sourceCompatibility = 1.8
@@ -18,7 +18,14 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
-        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+
+        // As of Gradle 5.1, you can limit this to only those
+        // dependencies you expect from it
+        content {
+            includeGroup 'org.bukkit'
+            includeGroup 'org.spigotmc'
+        }
     }
 }
 
@@ -36,7 +43,7 @@ dependencies {
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
     compile 'com.google.apis:google-api-services-drive:v3-rev110-1.23.0'
 
-    compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
+    compileOnly 'org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT'
 }
 
 jar {

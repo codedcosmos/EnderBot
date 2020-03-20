@@ -24,6 +24,8 @@ import javax.security.auth.login.LoginException;
 
 public class JDABot {
 
+	private static JDA jda;
+	
 	public static void main(String[] args) {
 		Log.print("Starting EnderBot Discord Subsystem");
 		EnderBot.load(false);
@@ -40,11 +42,15 @@ public class JDABot {
 			builder.addEventListeners(new DiscordChatListener());
 			builder.addEventListeners(new DiscordEventHandler());
 
-			JDA jda = builder.build();
+			jda = builder.build();
 
 			jda.awaitReady();
 		} catch (LoginException | InterruptedException e) {
 			Log.printErr(e);
 		}
+	}
+	
+	public static void stop() {
+		jda.shutdownNow();
 	}
 }

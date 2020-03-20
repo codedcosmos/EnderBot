@@ -34,6 +34,7 @@ public class ConfigManager {
 	public static String minecraft_ingame_channel_name;
 	public static String world_backups_channel_name;
 	public static int world_backups_frequency_in_days;
+	public static boolean world_backups_enabled;
 
 	// Censored Config values
 	public static String discord_bot_token;
@@ -49,6 +50,9 @@ public class ConfigManager {
 
 		// How often the world will be backed up (in days)
 		defaults.put("world-backups-frequency-in-days", "30");
+		
+		// Defines if the game will be backed up at all
+		defaults.put("world-backups-enabled", "False");
 
 
 		// Discord Developer API bot token
@@ -122,6 +126,15 @@ public class ConfigManager {
 				world_backups_frequency_in_days = 30;
 			}
 			Log.print("Loaded 'world-backups-frequency-in-days' as " + world_backups_frequency_in_days);
+			
+			try {
+				world_backups_enabled = Boolean.parseBoolean(prop.getProperty("world-backups-enabled").toLowerCase());
+			} catch (NumberFormatException e) {
+				Log.printErr("Failed to load config 'world-backups-frequency-in-days'");
+				Log.printErr("Setting it as default!");
+				world_backups_enabled = false;
+			}
+			Log.print("Loaded 'world-backups-enabled' as " + world_backups_enabled);
 
 
 

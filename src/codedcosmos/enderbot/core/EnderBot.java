@@ -13,11 +13,12 @@
  */
 package codedcosmos.enderbot.core;
 
+import codedcosmos.enderbot.utils.GoogleDrive;
 import codedcosmos.enderbot.utils.Log;
 
 public class EnderBot {
 
-	private static final String VERSION = "0.1";
+	private static final String VERSION = "1.0";
 	private static boolean runningInSpigot = false;
 
 	public static void load(boolean runningInSpigot) {
@@ -34,5 +35,9 @@ public class EnderBot {
 
 	public static boolean isRunningInSpigot() {
 		return runningInSpigot;
+	}
+	
+	public static String getVersion() {
+		return VERSION;
 	}
 }

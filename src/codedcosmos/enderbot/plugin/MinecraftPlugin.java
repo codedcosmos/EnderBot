@@ -13,8 +13,10 @@
  */
 package codedcosmos.enderbot.plugin;
 
+import codedcosmos.enderbot.core.ConfigManager;
 import codedcosmos.enderbot.discord.JDABot;
 import codedcosmos.enderbot.core.EnderBot;
+import codedcosmos.enderbot.plugin.commands.BackupCommand;
 import codedcosmos.enderbot.utils.GoogleDrive;
 import codedcosmos.enderbot.utils.Log;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,22 +28,24 @@ public class MinecraftPlugin extends JavaPlugin {
 	@Override
 	public void onEnable(){
 		//Fired when the server enables the plugin
-		Log.print("Enabling EnderBot");
+		Log.print("Enabling EnderBot v" + EnderBot.getVersion());
 		EnderBot.load(true);
 
 		JDABot.initBot();
 		mainPlugin = this;
+		
+		this.getCommand("enderbackup").setExecutor(new BackupCommand());
 
 		getServer().getPluginManager().registerEvents(new MinecraftChatListener(), this);
-		archiveLoop();
+		
+		if (ConfigManager.world_backups_enabled) archiveLoop();
 	}
 
 	public void archiveLoop() {
 		JavaPlugin plugin = this;
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			public void run() {
-				int time = GoogleDrive.archiveIfNeeded();
-				Log.print("Backup task completed in " + time + "ms");
+				GoogleDrive.archiveIfNeeded();
 				archiveLoop();
 			}
 		}, 20L*60*30);
@@ -52,5 +56,6 @@ public class MinecraftPlugin extends JavaPlugin {
 	public void onDisable(){
 		//Fired when the server stops and disables all plugins
 		Log.print("Disabiling EnderBot");
+		JDABot.stop();
 	}
 }

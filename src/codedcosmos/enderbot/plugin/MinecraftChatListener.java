@@ -20,12 +20,28 @@ import codedcosmos.enderbot.utils.Log;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class MinecraftChatListener implements Listener {
 	@EventHandler
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		for (GuildContext context : Guilds.getContexts()) {
 			context.getInGameChannel().sendMessage("**"+event.getPlayer().getDisplayName()+"** : " + event.getMessage());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		for (GuildContext context : Guilds.getContexts()) {
+			context.getInGameChannel().sendMessage("`"+event.getPlayer().getDisplayName()+" joined the game`");
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		for (GuildContext context : Guilds.getContexts()) {
+			context.getInGameChannel().sendMessage("`"+event.getPlayer().getDisplayName()+" left the game`");
 		}
 	}
 }

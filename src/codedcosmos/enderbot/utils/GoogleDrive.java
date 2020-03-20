@@ -16,6 +16,7 @@ package codedcosmos.enderbot.utils;
 import codedcosmos.enderbot.core.ConfigManager;
 import codedcosmos.enderbot.discord.GuildContext;
 import codedcosmos.enderbot.discord.Guilds;
+import codedcosmos.enderbot.plugin.commands.BackupCommand;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
@@ -25,8 +26,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.About;
 import com.google.api.services.drive.model.Permission;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -35,13 +36,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,33 +50,24 @@ import java.util.List;
 
 
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class GoogleDrive {
-	public static final String EXPORT_LOG_PATH = "plugins/EnderBot/";
-	public static final String EXPORT_LOG = EXPORT_LOG_PATH+"archive_log.txt";
+	public static final String EXPORT_LOG_PATH = "plugins/EnderBot";
+	public static final String EXPORT_LOG = EXPORT_LOG_PATH+"/archive_log.txt";
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd--HH:mm:ss";
+	
+	public static final String BACKUP_PATH = "plugins/EnderBot/backups";
 
-	public static int archiveIfNeeded() {
+	public static void archiveIfNeeded() {
 		if (shouldArchive()) {
-			Console.print("Running Server World Archive.");
-			Console.print("This will create lag for a short while");
-			int time = archive();
-			Console.print("Completed archival process in " + time + "ms");
+			archive();
 		}
-		return -1;
 	}
 
 	public static boolean shouldArchive() {
@@ -135,40 +122,52 @@ public class GoogleDrive {
 		return false;
 	}
 
-	public static int archive() {
-		long start = System.currentTimeMillis();
-
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern(DATE_FORMAT);
-		LocalDateTime now = LocalDateTime.now();
-		String filename = "world-"+dtf.format(now)+".zip";
-
-		try {
-			// Create zip
-			FileUtils.mkdirIfMissing("enderbotbackups");
-			FileUtils.clearDirectory("enderbotbackups");
-			FileUtils.zip("world", "enderbotbackups/"+filename);
-
-			// Append to archive log
-			Writer output = new BufferedWriter(new FileWriter(EXPORT_LOG, true));
-			output.append("\n"+dtf.format(now));
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Upload it
-		upload();
-
-		int timeMS = (int) (System.currentTimeMillis()-start);
-		return timeMS;
+	public static void archive() {
+		if (!ConfigManager.world_backups_enabled) return;
+		
+		Thread thread = new Thread() {
+			public void run() {
+				Console.print("Running Server World Archive.");
+				Console.print("This will create lag for a short while");
+				
+				long start = System.currentTimeMillis();
+				
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern(DATE_FORMAT);
+				LocalDateTime now = LocalDateTime.now();
+				String filename = "world-"+dtf.format(now)+".zip";
+				
+				try {
+					// Create zip
+					FileUtils.mkdirIfMissing(BACKUP_PATH);
+					FileUtils.clearDirectory(BACKUP_PATH);
+					FileUtils.zip("world", BACKUP_PATH+"/"+filename);
+					
+					// Append to archive log
+					Writer output = new BufferedWriter(new FileWriter(EXPORT_LOG, true));
+					output.append("\n"+dtf.format(now));
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				// Upload it
+				upload();
+				
+				int timeMS = (int) (System.currentTimeMillis()-start);
+				
+				Console.print("Completed archival process in " + timeMS + "ms");
+				Log.print("Backup task completed in " + timeMS + "ms");
+			}
+		};
+		thread.start();
 	}
 
 	private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 	private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
-	private static final String CREDENTIALS_FILE_PATH = EXPORT_LOG_PATH+"credentials.json";
-	private static final String TOKENS_DIRECTORY_PATH = EXPORT_LOG_PATH+"tokens";
+	private static final String CREDENTIALS_FILE_PATH = EXPORT_LOG_PATH+"/credentials.json";
+	private static final String TOKENS_DIRECTORY_PATH = EXPORT_LOG_PATH+"/tokens";
 
 	public static void upload() {
 		try {
@@ -189,7 +188,9 @@ public class GoogleDrive {
 					.setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
 					.setAccessType("offline")
 					.build();
-			LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+			LocalServerReceiver receiver = new LocalServerReceiver.Builder()
+					.setPort(8888)
+					.build();
 
 			Credential credentials = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
 
@@ -199,7 +200,7 @@ public class GoogleDrive {
 					.build();
 
 			// Upload
-			String filenameFull = FileUtils.getFirstZip("enderbotbackups");
+			String filenameFull = FileUtils.getFirstZip(BACKUP_PATH);
 			String filename = Paths.get(filenameFull).getFileName().toString();
 			java.io.File filePath = new java.io.File(filenameFull);
 
