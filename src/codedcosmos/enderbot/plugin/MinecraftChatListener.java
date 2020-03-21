@@ -27,21 +27,21 @@ public class MinecraftChatListener implements Listener {
 	@EventHandler
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		for (GuildContext context : Guilds.getContexts()) {
-			context.getInGameChannel().sendMessage("**"+event.getPlayer().getDisplayName()+"** : " + event.getMessage());
+			context.getInGameChannel().sendMessage("**"+format(event.getPlayer().getDisplayName())+"** : " + event.getMessage());
 		}
 	}
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		for (GuildContext context : Guilds.getContexts()) {
-			context.getInGameChannel().sendMessage("`"+event.getPlayer().getName()+" joined the game`");
+			context.getInGameChannel().sendMessage("`"+format(event.getPlayer().getName())+" joined the game`");
 		}
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		for (GuildContext context : Guilds.getContexts()) {
-			context.getInGameChannel().sendMessage("`"+event.getPlayer().getDisplayName()+" left the game`");
+			context.getInGameChannel().sendMessage("`"+format(event.getPlayer().getDisplayName())+" left the game`");
 		}
 	}
 	

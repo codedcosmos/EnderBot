@@ -18,7 +18,7 @@ import codedcosmos.enderbot.utils.Log;
 
 public class EnderBot {
 
-	private static final String VERSION = "1.1";
+	private static final String VERSION = "1.2";
 	private static boolean runningInSpigot = false;
 
 	public static void load(boolean runningInSpigot) {
