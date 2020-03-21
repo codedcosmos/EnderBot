@@ -34,7 +34,7 @@ public class MinecraftChatListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		for (GuildContext context : Guilds.getContexts()) {
-			context.getInGameChannel().sendMessage("`"+event.getPlayer().getDisplayName()+" joined the game`");
+			context.getInGameChannel().sendMessage("`"+event.getPlayer().getName()+" joined the game`");
 		}
 	}
 	
@@ -43,5 +43,24 @@ public class MinecraftChatListener implements Listener {
 		for (GuildContext context : Guilds.getContexts()) {
 			context.getInGameChannel().sendMessage("`"+event.getPlayer().getDisplayName()+" left the game`");
 		}
+	}
+	
+	public String format(String username) {
+		String text = "";
+		boolean skipNext = false;
+		for (int i = 0; i < username.length(); i++) {
+			char c = username.charAt(i);
+			
+			if (c == '§') {
+				skipNext = true;
+			} else if (skipNext) {
+				skipNext = false;
+				continue;
+			} else {
+				text += username.charAt(i);
+			}
+		}
+		
+		return text;
 	}
 }
