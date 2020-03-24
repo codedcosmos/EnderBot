@@ -17,9 +17,12 @@ import codedcosmos.enderbot.discord.GuildContext;
 import codedcosmos.enderbot.discord.Guilds;
 import codedcosmos.enderbot.utils.Console;
 import codedcosmos.enderbot.utils.Log;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -42,6 +45,20 @@ public class MinecraftChatListener implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		for (GuildContext context : Guilds.getContexts()) {
 			context.getInGameChannel().sendMessage("`"+format(event.getPlayer().getDisplayName())+" left the game`");
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerAdvancementDone(PlayerAdvancementDoneEvent event) {
+		for (GuildContext context : Guilds.getContexts()) {
+			context.getInGameChannel().sendMessage("`"+format(event.getPlayer().getDisplayName()) + " has made the advancement ["+ event.getAdvancement().getKey().getKey() + "]`");
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		for (GuildContext context : Guilds.getContexts()) {
+			context.getInGameChannel().sendMessage("`"+event.getDeathMessage()+"`");
 		}
 	}
 	

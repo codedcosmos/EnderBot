@@ -34,7 +34,7 @@ public class CachedTextChannel {
 
 	public void sendMessage(String message) {
 		if (!isValid) return;
-		TextChannelHandler.sendThenWait(channel, message);
+		TextChannelHandler.send(channel, message);
 	}
 
 	public boolean matches(TextChannel channel) {
