@@ -50,8 +50,11 @@ public class MinecraftChatListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerAdvancementDone(PlayerAdvancementDoneEvent event) {
+		String advancement = event.getAdvancement().getKey().getKey();
+		if (advancement.startsWith("recipe")) return;
+		
 		for (GuildContext context : Guilds.getContexts()) {
-			context.getInGameChannel().sendMessage("`"+format(event.getPlayer().getDisplayName()) + " has made the advancement ["+ event.getAdvancement().getKey().getKey() + "]`");
+			context.getInGameChannel().sendMessage("`"+format(event.getPlayer().getDisplayName()) + " has made the advancement ["+ advancement +"]`");
 		}
 	}
 	
