@@ -36,7 +36,7 @@ public class JDABot {
 		Guilds.init();
 
 		try {
-			JDABuilder builder = new JDABuilder(ConfigManager.discord_bot_token);
+			JDABuilder builder = JDABuilder.createDefault(ConfigManager.discord_bot_token);
 
 			builder.setActivity(Activity.playing("Minecraft"));
 			builder.addEventListeners(new DiscordChatListener());
