@@ -135,13 +135,13 @@ public class GoogleDrive {
 				
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern(DATE_FORMAT);
 				LocalDateTime now = LocalDateTime.now();
-				String filename = "world-"+dtf.format(now)+".zip";
+				String filename = ConfigManager.world_name+"-"+dtf.format(now)+".zip";
 				
 				try {
 					// Create zip
 					FileUtils.mkdirIfMissing(BACKUP_PATH);
 					FileUtils.clearDirectory(BACKUP_PATH);
-					FileUtils.zip("world", BACKUP_PATH+"/"+filename);
+					FileUtils.zip(ConfigManager.world_name, BACKUP_PATH+"/"+filename);
 					
 					// Append to archive log
 					Writer output = new BufferedWriter(new FileWriter(EXPORT_LOG, true));

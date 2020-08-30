@@ -36,6 +36,8 @@ public class ConfigManager {
 	public static int world_backups_frequency_in_days;
 	public static boolean world_backups_enabled;
 
+	public static String world_name;
+
 	// Censored Config values
 	public static String discord_bot_token;
 
@@ -54,6 +56,8 @@ public class ConfigManager {
 		// Defines if the game will be backed up at all
 		defaults.put("world-backups-enabled", "False");
 
+		// Defines if the game will be backed up at all
+		defaults.put("world_name", "world");
 
 		// Discord Developer API bot token
 		defaults.put("discord_bot_token", "");
@@ -134,6 +138,13 @@ public class ConfigManager {
 			}
 			Log.print("Loaded 'world-backups-enabled' as " + world_backups_enabled);
 
+			world_name = prop.getProperty("world_name");
+			if (world_name == null) {
+				Log.printErr("Failed to load config 'world_name");
+				Log.printErr("Setting it as default!");
+				world_name = "world";
+			}
+			Log.print("Loaded 'minecraft-ingame-channel-name' as " + world_name);
 
 
 			// Censored Values

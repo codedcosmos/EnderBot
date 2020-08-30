@@ -18,7 +18,7 @@ import codedcosmos.enderbot.utils.Log;
 
 public class EnderBot {
 
-	private static final String VERSION = "2.0";
+	private static final String VERSION = "2.1";
 
 	public static void load() {
 		ConfigManager.load();

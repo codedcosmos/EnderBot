@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'codedcosmos'
-version '2.0'
+version '2.1'
 mainClassName = 'codedcosmos.enderbot.core.EnderBot'
 
 sourceCompatibility = 1.8
