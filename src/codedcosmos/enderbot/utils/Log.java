@@ -30,15 +30,13 @@ public class Log {
 	public static void print(Object... line) {
 		String completedLine = getCompletedLine(line);
 
-		if (EnderBot.isRunningInSpigot()) System.out.print(completedLine);
-		else System.out.println(completedLine);
+		System.out.println(completedLine);
 	}
 
 	public static void printErr(Object... line) {
 		String completedLine = getCompletedLine(line);
 
-		if (EnderBot.isRunningInSpigot()) System.err.print(completedLine);
-		else System.err.println(completedLine);
+		System.err.println(completedLine);
 	}
 
 	// Insert line

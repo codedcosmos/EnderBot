@@ -25,12 +25,6 @@ import javax.security.auth.login.LoginException;
 public class JDABot {
 
 	private static JDA jda;
-	
-	public static void main(String[] args) {
-		Log.print("Starting EnderBot Discord Subsystem");
-		EnderBot.load(false);
-		initBot();
-	}
 
 	public static void initBot() {
 		Guilds.init();

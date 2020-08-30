@@ -14,6 +14,8 @@
 package codedcosmos.enderbot.plugin;
 
 import codedcosmos.enderbot.core.ConfigManager;
+import codedcosmos.enderbot.discord.GuildContext;
+import codedcosmos.enderbot.discord.Guilds;
 import codedcosmos.enderbot.discord.JDABot;
 import codedcosmos.enderbot.core.EnderBot;
 import codedcosmos.enderbot.plugin.commands.BackupCommand;
@@ -29,7 +31,7 @@ public class MinecraftPlugin extends JavaPlugin {
 	public void onEnable(){
 		//Fired when the server enables the plugin
 		Log.print("Enabling EnderBot v" + EnderBot.getVersion());
-		EnderBot.load(true);
+		EnderBot.load();
 
 		JDABot.initBot();
 		mainPlugin = this;
@@ -37,25 +39,47 @@ public class MinecraftPlugin extends JavaPlugin {
 		this.getCommand("enderbackup").setExecutor(new BackupCommand());
 
 		getServer().getPluginManager().registerEvents(new MinecraftChatListener(), this);
+
+		for (GuildContext context : Guilds.getContexts()) {
+			context.getInGameChannel().sendMessage("`Server is Online`");
+		}
 		
-		if (ConfigManager.world_backups_enabled) archiveLoop();
+		if (ConfigManager.world_backups_enabled) {
+			GoogleDrive.archiveIfNeeded();
+			// Bad code but whatever
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			archiveLoop();
+		}
 	}
 
 	public void archiveLoop() {
-		JavaPlugin plugin = this;
-		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-			public void run() {
-				GoogleDrive.archiveIfNeeded();
-				archiveLoop();
-			}
-		}, 20L*60*30);
+		getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+			GoogleDrive.archiveIfNeeded();
+			archiveLoop();
+		}, 20L*60*60*4);
 	}
 
 
 	@Override
 	public void onDisable(){
-		//Fired when the server stops and disables all plugins
+		// Fired when the server stops and disables all plugins
 		Log.print("Disabiling EnderBot");
+
+		for (GuildContext context : Guilds.getContexts()) {
+			context.getInGameChannel().sendMessage("`Server is Offline`");
+		}
+
+		// Terrible idea but it works I guess
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		JDABot.stop();
 	}
 }

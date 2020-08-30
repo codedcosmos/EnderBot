@@ -65,6 +65,7 @@ public class GoogleDrive {
 	public static final String BACKUP_PATH = "plugins/EnderBot/backups";
 
 	public static void archiveIfNeeded() {
+		Log.print("Checking archive");
 		if (shouldArchive()) {
 			archive();
 		}
@@ -149,8 +150,10 @@ public class GoogleDrive {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				Console.print("Created zip file");
 				
 				// Upload it
+				Console.print("Uploading");
 				upload();
 				
 				int timeMS = (int) (System.currentTimeMillis()-start);

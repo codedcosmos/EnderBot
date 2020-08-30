@@ -1,5 +1,5 @@
 name: EnderBot
-version: 1.4
+version: 2.0
 author: codedcosmos
 main: codedcosmos.enderbot.plugin.MinecraftPlugin
 api-version: 1.16

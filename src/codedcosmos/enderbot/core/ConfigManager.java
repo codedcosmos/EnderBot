@@ -65,9 +65,7 @@ public class ConfigManager {
 		if (!FileUtils.doesFileExist(getConfig())) {
 			Log.print("EnderBot Config File does not exist, generating!");
 
-			if (EnderBot.isRunningInSpigot()) {
-				FileUtils.mkdir(CONFIG_SPIGOT_PATH);
-			}
+			FileUtils.mkdir(CONFIG_SPIGOT_PATH);
 
 			// Write to file
 			try {
@@ -154,18 +152,10 @@ public class ConfigManager {
 	}
 
 	private static String getPath() {
-		if (EnderBot.isRunningInSpigot()) {
-			return CONFIG_SPIGOT_PATH;
-		} else {
-			return CONFIG_RUNTIME_PATH;
-		}
+		return CONFIG_SPIGOT_PATH;
 	}
 
 	private static String getConfig() {
-		if (EnderBot.isRunningInSpigot()) {
-			return CONFIG_SPIGOT;
-		} else {
-			return CONFIG_RUNTIME;
-		}
+		return CONFIG_SPIGOT;
 	}
 }

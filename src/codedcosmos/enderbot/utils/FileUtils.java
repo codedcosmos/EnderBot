@@ -49,6 +49,7 @@ public class FileUtils {
 						zs.putNextEntry(zipEntry);
 						Files.copy(path, zs);
 						zs.closeEntry();
+						Log.print("Zipping " + path);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

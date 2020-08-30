@@ -18,23 +18,10 @@ import codedcosmos.enderbot.utils.Log;
 
 public class EnderBot {
 
-	private static final String VERSION = "1.4";
-	private static boolean runningInSpigot = false;
+	private static final String VERSION = "2.0";
 
-	public static void load(boolean runningInSpigot) {
-		EnderBot.runningInSpigot = runningInSpigot;
-
-		if (runningInSpigot) {
-			Log.print("Loading for Spigot Runtime");
-		} else {
-			Log.print("Loading for Local Runtime");
-		}
-
+	public static void load() {
 		ConfigManager.load();
-	}
-
-	public static boolean isRunningInSpigot() {
-		return runningInSpigot;
 	}
 	
 	public static String getVersion() {
